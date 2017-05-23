@@ -14,7 +14,7 @@ x310.c	Control program for ControlByWeb WebRelay X-310
 Usage overview - serves as a requirements specification.
 
 USAGE:
-	x310 {options}
+	x310 [options]
 
 	option:
 		-s status. Returns the status of relays inputs and sensors
