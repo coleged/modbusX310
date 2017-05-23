@@ -163,7 +163,7 @@ ctx = modbus_new_tcp(X310_IP, MODBUS_TCP_DEFAULT_PORT );
 		if (flag_d==TRUE){
 			relays[1] = FALSE;
 			if (flag_v==TRUE){
-				printf("Turning Relay 2 off");
+				printf("Turning Relay 2 off\n");
 			}
 		}
 	}   
@@ -178,7 +178,7 @@ ctx = modbus_new_tcp(X310_IP, MODBUS_TCP_DEFAULT_PORT );
 		if (flag_d==TRUE){
 			relays[2] = FALSE;
 			if (flag_v==TRUE){
-				printf("Turning Relay 3 off");
+				printf("Turning Relay 3 off\n");
 			}
 		}
 	}
@@ -193,7 +193,7 @@ ctx = modbus_new_tcp(X310_IP, MODBUS_TCP_DEFAULT_PORT );
 		if (flag_d==TRUE){
 			relays[3] = FALSE;
 			if (flag_v==TRUE){
-				printf("Turning Relay 4 off");
+				printf("Turning Relay 4 off\n");
 			}
 		}
 	}
