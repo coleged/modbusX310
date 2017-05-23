@@ -4,6 +4,9 @@ x310.c	Control program for ControlByWeb WebRelay X-310
 		Quick hack to check out modbus
 		A bit messy, but works OK.
 
+		V 1.0 - messy hack
+		V 1.0.1 - tidy up, no feature changes
+
 		Ed Cole colege@gmail.com
 
 		22/5/2017
@@ -32,7 +35,7 @@ Which expands to
 gcc x310.c -o x310 -I/usr/local/include/modbus  -L/usr/local/lib -lmodbus
 
 *************************************************/
-#define VERSION "x310: v1.0.0 22/5/17 Ed Cole colege@gmail.com\n"
+#define VERSION "x310: v1.0.1 22/5/17 Ed Cole colege@gmail.com\n"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,6 +57,8 @@ int	vinAdd = 16;			// modbus address for Vin
 
 void print_status(int verbose);
 void usageError(char *prog);
+void turnON(int relay, int verbose);
+void turnOFF(int relay, int verbose);
 
 int main(int argc, char *argv[]){
 
@@ -140,62 +145,20 @@ ctx = modbus_new_tcp(X310_IP, MODBUS_TCP_DEFAULT_PORT );
 		print_status(flag_v);
 	}//if
 	if (flag_1==TRUE){
-		if (flag_e==TRUE){
-			relays[0] = TRUE;
-			if (flag_v==TRUE){
-                               	printf("Turning Relay 1 on\n");
-                       	}
-		}
-		if (flag_d==TRUE){
-			relays[0] = FALSE;
-			if (flag_v==TRUE){
-				printf("Turning Relay 1 off\n");
-			}
-		}
+		if (flag_e==TRUE) turnON(1,flag_v);
+		if (flag_d==TRUE) turnOFF(1,flag_v);
 	}
 	if (flag_2==TRUE){
-		if (flag_e==TRUE){
-			relays[1] = TRUE;
-			if (flag_v==TRUE){
-				printf("Turning Relay 2 on\n");
-			}
-		}
-		if (flag_d==TRUE){
-			relays[1] = FALSE;
-			if (flag_v==TRUE){
-				printf("Turning Relay 2 off\n");
-			}
-		}
+		if (flag_e==TRUE) turnON(2,flag_v);
+		if (flag_d==TRUE) turnOFF(2,flag_v);
 	}   
-
 	if (flag_3==TRUE){
-		if (flag_e==TRUE){
-			relays[2] = TRUE;
-			if (flag_v==TRUE){
-				printf("Turning Relay 3 on\n");
-			}
-		}
-		if (flag_d==TRUE){
-			relays[2] = FALSE;
-			if (flag_v==TRUE){
-				printf("Turning Relay 3 off\n");
-			}
-		}
+		if (flag_e==TRUE) turnON(3,flag_v);
+		if (flag_d==TRUE) turnOFF(3,flag_v);
 	}
-
 	if (flag_4==TRUE){
-		if (flag_e==TRUE){
-			relays[3] = TRUE;
-			if (flag_v==TRUE){
-				printf("Turning Relay 4 on\n");
-			}
-		}
-		if (flag_d==TRUE){
-			relays[3] = FALSE;
-			if (flag_v==TRUE){
-				printf("Turning Relay 4 off\n");
-			}
-		}
+		if (flag_e==TRUE) turnON(4,flag_v);
+		if (flag_d==TRUE) turnOFF(4,flag_v);
 	}
 
 
@@ -212,34 +175,22 @@ ctx = modbus_new_tcp(X310_IP, MODBUS_TCP_DEFAULT_PORT );
 }//main
 
 void print_status(int verbose){
+int i;
 	printf("Inputs = %x %x %x %x\n",
 		inputs[0],inputs[1],inputs[2],inputs[3]);
 
 	printf("Relays  = %x %x %x %x\n",
 		relays[0],relays[1],relays[2],relays[3]);
 	if (verbose==TRUE){
-		if (relays[0]==TRUE){
-			printf("Ralay 1 ON\n");
-		}else{
-			printf("Relay 1 OFF\n");
-		}
-		if (relays[1]==TRUE){
-                        printf("Relay 2 ON\n");
-                }else{
-			printf("Relay 2 OFF\n");
-                }
-		if (relays[2]==TRUE){
-                        printf("Relay 3 ON\n");
-                }else{
-                        printf("Relay 3 OFF\n");
-                }       
-		if (relays[3]==TRUE){
-			printf("Relay 4 ON\n");
-		}else{
-			printf("Relay 4 OFF\n");
-		}
+		for (i=0;i<4;i++){
+			if (relays[i]==TRUE){
+				printf("Relay %x ON\n",i+1);
+			}else{
+				printf("Relay %x OFF\n",i+1);
+			}//if
+		}//for
 			
-	}//if flag_v
+	}//if 
 	printf("Sensors = %.2f %.2f %.2f %.2f\n",
 		sen[0],sen[1],sen[2],sen[3]);
 	printf("Voltage = %.2f\n",
@@ -261,3 +212,18 @@ void usageError(char *prog)
     exit(1);
 }
 
+
+void turnON(int relay, int v){
+	relays[relay-1] = 1;
+	if ( v == 1 ){
+		printf("Turning Relay %x ON\n",relay);
+	}
+
+}
+
+void turnOFF(int relay, int v){
+	relays[relay-1] = 0;
+	if ( v == 1 ){
+		printf("Turning Relay %x OFF\n",relay);
+	}
+}
